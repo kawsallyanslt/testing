@@ -1,0 +1,56 @@
+name: Deploy Website
+
+# Trigger deployment whenever code is pushed to main
+on:
+  push:
+    branches:
+      - main
+
+  # Allow manual deployment
+  workflow_dispatch:
+
+# Permissions required for GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent multiple deployments at the same time
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+
+  # JOB 1: Verify and prepare the website
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Verify website files
+        run: |
+          echo "Checking website..."
+          test -f index.html
+          echo "Website verification successful!"
+
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  # JOB 2: Deploy the website
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
