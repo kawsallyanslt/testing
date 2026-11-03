@@ -1,10 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My CI/CD Demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d1f">
+  <title>DevOps — Ship Better. Ship Faster.</title>
+  <style>
+    :root {
+      --bg: #090d1f;
+      --panel: rgba(255,255,255,.065);
+      --muted: #aab4d0;
+      --text: #f5f7ff;
+      --cyan: #50e3e6;
+      --violet: #a78bfa;
+      --pink: #ff6fb5;
+      --lime: #b8f36b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 10%, rgba(80,227,230,.17), transparent 34rem),
+        radial-gradient(ellipse at 88% 24%, rgba(167,139,250,.2), transparent 32rem),
+        radial-gradient(ellipse at 55% 90%, rgba(255,111,181,.10), transparent 34rem),
+        var(--bg);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: auto; }
+    nav { display:flex; align-items:center; justify-content:space-between; padding:25px 0; }
+    .brand { font-weight:900; letter-spacing:.08em; font-size:1rem; }
+    .brand span { color:var(--cyan); }
+    .nav-link { color:var(--muted); font-size:.92rem; margin-left:22px; }
+    .nav-link:hover { color:white; }
+    .hero { padding:88px 0 76px; text-align:center; }
+    .eyebrow {
+      display:inline-flex; align-items:center; gap:9px; padding:7px 13px;
+      border:1px solid rgba(80,227,230,.35); border-radius:99px;
+      color:var(--cyan); background:rgba(80,227,230,.07);
+      font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+    }
+    .pulse { width:8px; height:8px; border-radius:50%; background:var(--lime); box-shadow:0 0 14px var(--lime); }
+    h1 { max-width:900px; margin:25px auto 18px; font-size:clamp(3rem, 8vw, 6.2rem); line-height:.99; letter-spacing:-.065em; }
+    .gradient { background:linear-gradient(95deg,var(--cyan),#9ba7ff 48%,var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .lead { max-width:690px; margin:0 auto; color:var(--muted); font-size:clamp(1rem,2vw,1.2rem); }
+    .actions { display:flex; justify-content:center; flex-wrap:wrap; gap:13px; margin-top:32px; }
+    .btn { padding:12px 19px; border-radius:12px; font-weight:800; border:1px solid transparent; transition:.2s; }
+    .btn-primary { color:#06111b; background:linear-gradient(100deg,var(--cyan),#9df4c9); box-shadow:0 8px 30px rgba(80,227,230,.2); }
+    .btn-secondary { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.04); }
+    .btn:hover { transform:translateY(-3px); }
+    .section { padding:64px 0; }
+    .section-head { text-align:center; margin-bottom:30px; }
+    .section-head h2 { font-size:clamp(1.8rem,4vw,2.7rem); letter-spacing:-.04em; margin:0 0 8px; }
+    .section-head p { color:var(--muted); margin:0; }
+    .pipeline { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .stage, .card {
+      background:var(--panel); border:1px solid rgba(255,255,255,.11);
+      border-radius:18px; padding:22px; backdrop-filter:blur(12px);
+    }
+    .stage { position:relative; min-height:190px; }
+    .stage-num { font-size:.76rem; color:var(--muted); font-weight:800; letter-spacing:.12em; }
+    .stage-icon { font-size:2rem; margin:13px 0 8px; }
+    .stage h3 { margin:0 0 6px; font-size:1.08rem; }
+    .stage p { margin:0; color:var(--muted); font-size:.9rem; }
+    .stage:nth-child(1) { border-top:2px solid var(--cyan); }
+    .stage:nth-child(2) { border-top:2px solid var(--violet); }
+    .stage:nth-child(3) { border-top:2px solid var(--pink); }
+    .stage:nth-child(4) { border-top:2px solid var(--lime); }
+    .pill-row { display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin-top:23px; }
+    .pill { border:1px solid rgba(255,255,255,.13); color:#dce4ff; background:rgba(255,255,255,.045); border-radius:99px; padding:6px 12px; font-size:.82rem; }
+    .impact { display:grid; grid-template-columns:1.05fr .95fr; gap:20px; align-items:stretch; }
+    .statement { padding:34px; border-radius:22px; background:linear-gradient(135deg,rgba(80,227,230,.15),rgba(167,139,250,.13)); border:1px solid rgba(80,227,230,.22); }
+    .statement h2 { font-size:clamp(2rem,4vw,3.1rem); line-height:1.08; letter-spacing:-.045em; margin:0 0 14px; }
+    .statement p { color:var(--muted); margin:0; }
+    .principles { display:grid; gap:12px; }
+    .principle { display:flex; gap:14px; align-items:flex-start; padding:17px; border-radius:15px; background:var(--panel); border:1px solid rgba(255,255,255,.09); }
+    .check { color:var(--lime); font-size:1.2rem; font-weight:900; }
+    .principle strong { display:block; margin-bottom:2px; }
+    .principle span:last-child { color:var(--muted); font-size:.9rem; }
+    .quote { text-align:center; padding:66px 15px 82px; }
+    .quote p { max-width:850px; margin:0 auto; font-size:clamp(1.7rem,4vw,3rem); line-height:1.2; font-weight:850; letter-spacing:-.04em; }
+    .quote p span { color:var(--cyan); }
+    footer { border-top:1px solid rgba(255,255,255,.1); padding:22px 0; color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:15px; flex-wrap:wrap; }
+    @media (max-width:760px) {
+      .hero { padding:65px 0 52px; }
+      .pipeline { grid-template-columns:repeat(2,1fr); }
+      .impact { grid-template-columns:1fr; }
+      .nav-link { margin-left:12px; }
+    }
+    @media (max-width:480px) {
+      .wrap { width:min(100% - 28px,1120px); }
+      .pipeline { grid-template-columns:1fr; }
+      nav { align-items:flex-start; }
+      .nav-links { text-align:right; }
+      .nav-link { display:inline-block; margin:0 0 0 10px; font-size:.82rem; }
+      .stage { min-height:auto; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello from GitHub Actions 2026 from the world of DevOps!</h1>
-    <p>My first automated deployment.</p>
+  <div class="wrap">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="#">DEV<span>OPS</span> / MINDSET</a>
+      <div class="nav-links">
+        <a class="nav-link" href="#pipeline">The flow</a>
+        <a class="nav-link" href="#impact">Why it matters</a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span class="pulse"></span> Build · Automate · Improve</div>
+        <h1>From code to <span class="gradient">impact.</span></h1>
+        <p class="lead">DevOps brings development and operations together so teams can deliver valuable software faster, more safely, and more reliably.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#pipeline">Explore the pipeline ↓</a>
+          <a class="btn btn-secondary" href="#impact">Discover the mindset</a>
+        </div>
+      </section>
+
+      <section class="section" id="pipeline">
+        <div class="section-head">
+          <h2>A better way to deliver</h2>
+          <p>One connected journey. Fast feedback at every step.</p>
+        </div>
+        <div class="pipeline">
+          <article class="stage">
+            <div class="stage-num">01 / PLAN & CODE</div>
+            <div class="stage-icon">⌨️</div>
+            <h3>Collaborate</h3>
+            <p>Share ideas, manage work, and build changes together.</p>
+          </article>
+          <article class="stage">
+            <div class="stage-num">02 / BUILD & TEST</div>
+            <div class="stage-icon">🧪</div>
+            <h3>Verify</h3>
+            <p>Run automated checks to catch problems early.</p>
+          </article>
+          <article class="stage">
+            <div class="stage-num">03 / RELEASE</div>
+            <div class="stage-icon">🚀</div>
+            <h3>Deliver</h3>
+            <p>Package approved changes and deploy consistently.</p>
+          </article>
+          <article class="stage">
+            <div class="stage-num">04 / OPERATE</div>
+            <div class="stage-icon">📈</div>
+            <h3>Learn</h3>
+            <p>Monitor real-world performance and feed insights back.</p>
+          </article>
+        </div>
+        <div class="pill-row" aria-label="Example DevOps tools">
+          <span class="pill">Git & GitHub</span>
+          <span class="pill">GitHub Actions</span>
+          <span class="pill">Docker</span>
+          <span class="pill">Cloud</span>
+          <span class="pill">Monitoring</span>
+        </div>
+      </section>
+
+      <section class="section" id="impact">
+        <div class="impact">
+          <div class="statement">
+            <h2>It's not just about deploying faster.</h2>
+            <p>It's about creating a dependable path from an idea to a better experience for the people who use your software.</p>
+          </div>
+          <div class="principles">
+            <div class="principle"><span class="check">✓</span><div><strong>Shorter feedback loops</strong><span>Find issues sooner, while they're easier to fix.</span></div></div>
+            <div class="principle"><span class="check">✓</span><div><strong>Repeatable releases</strong><span>Automate routine work and reduce human error.</span></div></div>
+            <div class="principle"><span class="check">✓</span><div><strong>Shared ownership</strong><span>Development and operations solve problems together.</span></div></div>
+            <div class="principle"><span class="check">✓</span><div><strong>Continuous improvement</strong><span>Use monitoring and feedback to make each release better.</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="quote">
+        <p>Great teams don't just ship software.<br><span>They build a system that keeps getting better.</span></p>
+      </section>
+    </main>
+
+    <footer>
+      <span>DEVOPS / MINDSET</span>
+      <span>Automate the work. Strengthen the feedback. Deliver with confidence.</span>
+    </footer>
+  </div>
 </body>
 </html>
